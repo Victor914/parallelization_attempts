@@ -35,11 +35,15 @@ int main(int argc, char** argv) {
         count_points = atoi(argv[3]);
     }
 
+    double start, end;
     int root = 0;
     double step = (max - min) / (count_points - 1.0);
     vector<Info> mass(count_points);
     MPI_Init(NULL, NULL);
     
+    MPI_Barrier(MPI_COMM_WORLD);
+    start = MPI_Wtime();
+
     MPI_Datatype InfoType;
     MPI_Datatype type[2] = { MPI_DOUBLE, MPI_DOUBLE };
     int blocklen[2] = { 1, 1 };
@@ -90,12 +94,13 @@ int main(int argc, char** argv) {
         }
         cout << "Best params: " << mass[i_max].point << endl;
     }
+    MPI_Barrier(MPI_COMM_WORLD);
+    end = MPI_Wtime();
+
+    if (rank == 0) 
+        cout << "Time execution: " << end - start << endl;
 
     MPI_Finalize();
     
     return 0;
 }
-
-//MPI_Send(info.data(), 343, InfoType, 1, 123, MPI_COMM_WORLD);
-//MPI_Status status;
-//MPI_Recv(info.data(), 343, InfoType, 0, 123, MPI_COMM_WORLD, &status);

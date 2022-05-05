@@ -3,6 +3,11 @@
 #include <vector>
 #include <cmath>
 
+#include <ctime>
+
+#define CLOCKS_PER_SEC 1000
+typedef long clock_t;
+
 using namespace std;
 
 void test_funct(double x, double & v) {
@@ -42,9 +47,11 @@ double find_by_setka(void (*pt2Func)(double, double&), double min, double max, i
 }
 
 int main(int argc, char** argv) {
+	clock_t t1 = clock();
+	
 	int count_points = 48;
     double min = 1.0, max = 7.5;
-
+	
 	if (argc == 4) {
         min = atof(argv[1]);
         max = atof(argv[2]);
@@ -54,6 +61,8 @@ int main(int argc, char** argv) {
 	pt2Func = &test_funct;
 	double best = find_by_setka(pt2Func, min, max, count_points);
 	cout << "Best params: " << best << endl;
-
+	clock_t t2 = clock();
+	cout << "Time execution: " << ((double)(t2 - t1) / CLOCKS_PER_SEC) << endl;
+	
 	return 0;
 }
